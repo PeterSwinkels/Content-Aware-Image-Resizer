@@ -24,7 +24,7 @@ Public Module CoreModule
       Public Indexes As List(Of Integer)  'Contains the indexes of the seam's pixels.
    End Structure
 
-   Private Const ARGBSize As Integer = 4  'The number of bytes in an alpha, red, green, and blue color value.
+   Private Const ARGB_SIZE As Integer = 4  'The number of bytes in an alpha, red, green, and blue color value.
 
    'This procedure returns the best vertical seam.
    Private Function BestVerticalSeam(Pixels As List(Of Byte), Stride As Integer, Height As Integer) As SeamStr
@@ -34,7 +34,7 @@ Public Module CoreModule
 
          If BestSeam.Energy = 0 Then Return BestSeam
 
-         For x As Integer = ARGBSize To Stride - ARGBSize Step ARGBSize
+         For x As Integer = ARGB_SIZE To Stride - ARGB_SIZE Step ARGB_SIZE
             Seam = VerticalSeam(Pixels, Stride, Height, x)
             If Seam.Energy < BestSeam.Energy Then BestSeam = Seam
          Next x
@@ -115,24 +115,24 @@ Public Module CoreModule
                With BestVerticalSeam(ImagePixels, BitmapStride, ResizedImage.Height)
                   .Indexes.Sort()
                   .Indexes.Reverse()
-                  .Indexes.ForEach(Sub(Index As Integer) ImagePixels.InsertRange(Index + ARGBSize, ImagePixels.GetRange(Index, ARGBSize)))
+                  .Indexes.ForEach(Sub(Index As Integer) ImagePixels.InsertRange(Index + ARGB_SIZE, ImagePixels.GetRange(Index, ARGB_SIZE)))
                End With
 
-               BitmapStride += ARGBSize
+               BitmapStride += ARGB_SIZE
             Next Resize
          Else
             For Resize As Integer = 1 To Abs(Resizes)
                With BestVerticalSeam(ImagePixels, BitmapStride, ResizedImage.Height)
                   .Indexes.Sort()
                   .Indexes.Reverse()
-                  .Indexes.ForEach(Sub(Index As Integer) ImagePixels.RemoveRange(Index, ARGBSize))
+                  .Indexes.ForEach(Sub(Index As Integer) ImagePixels.RemoveRange(Index, ARGB_SIZE))
                End With
 
-               BitmapStride -= ARGBSize
+               BitmapStride -= ARGB_SIZE
             Next Resize
          End If
 
-         ResizedImage = New Bitmap(CInt(BitmapStride / ARGBSize), ResizedImage.Height)
+         ResizedImage = New Bitmap(CInt(BitmapStride / ARGB_SIZE), ResizedImage.Height)
 
          With ResizedImage
             Buffer = ImagePixels.ToArray()
@@ -163,19 +163,19 @@ Public Module CoreModule
          For y As Integer = 0 To Height - 1
             CurrentIndex = (y * Stride) + x
 
-            NextIndex = (y * Stride) + (x - ARGBSize)
-            Differences(0) = If(x >= ARGBSize, ColorDifference({Pixels(CurrentIndex), Pixels(CurrentIndex + 1), Pixels(CurrentIndex + 2)}, {Pixels(NextIndex), Pixels(NextIndex + 1), Pixels(NextIndex + 2)}), Byte.MaxValue)
+            NextIndex = (y * Stride) + (x - ARGB_SIZE)
+            Differences(0) = If(x >= ARGB_SIZE, ColorDifference({Pixels(CurrentIndex), Pixels(CurrentIndex + 1), Pixels(CurrentIndex + 2)}, {Pixels(NextIndex), Pixels(NextIndex + 1), Pixels(NextIndex + 2)}), Byte.MaxValue)
             NextIndex = ((y + 1) * Stride) + x
             Differences(1) = If(y < Height - 1, ColorDifference({Pixels(CurrentIndex), Pixels(CurrentIndex + 1), Pixels(CurrentIndex + 2)}, {Pixels(NextIndex), Pixels(NextIndex + 1), Pixels(NextIndex + 2)}), Byte.MaxValue)
-            NextIndex = (y * Stride) + (x + ARGBSize)
-            Differences(2) = If(x + ARGBSize < Stride, ColorDifference({Pixels(CurrentIndex), Pixels(CurrentIndex + 1), Pixels(CurrentIndex + 2)}, {Pixels(NextIndex), Pixels(NextIndex + 1), Pixels(NextIndex + 2)}), Byte.MaxValue)
+            NextIndex = (y * Stride) + (x + ARGB_SIZE)
+            Differences(2) = If(x + ARGB_SIZE < Stride, ColorDifference({Pixels(CurrentIndex), Pixels(CurrentIndex + 1), Pixels(CurrentIndex + 2)}, {Pixels(NextIndex), Pixels(NextIndex + 1), Pixels(NextIndex + 2)}), Byte.MaxValue)
             Lowest = GetLowest(Differences)
             Seam.Energy += Differences(Lowest)
             Seam.Indexes.Add(CurrentIndex)
             If Lowest = 0 Then
-               x -= ARGBSize
+               x -= ARGB_SIZE
             ElseIf Lowest = 2 Then
-               x += ARGBSize
+               x += ARGB_SIZE
             End If
          Next y
 
