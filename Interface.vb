@@ -128,7 +128,7 @@ Public Class InterfaceWindow
       Try
          Dim EndTime As DateTime = My.Computer.Clock.LocalTime
 
-         DisplayStatus($"Resizing took {EndTime.Subtract(StartTime).Duration.Milliseconds} millisecond(s).")
+         DisplayStatus($"Resizing took {EndTime.Subtract(StartTime).TotalMilliseconds} millisecond(s).")
 
          My.Computer.Audio.PlaySystemSound(SystemSounds.Beep)
       Catch ExceptionO As Exception
