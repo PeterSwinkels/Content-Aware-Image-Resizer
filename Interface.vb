@@ -30,6 +30,8 @@ Public Class InterfaceWindow
             Me.Size = New Size(CInt(.Width / 1.5), CInt(.Height / 1.5))
          End With
 
+         My.Application.ChangeCulture("en-US")
+
          CurrentImageBox.Size = Me.ClientSize
 
          CurrentImage = New Bitmap(CurrentImageBox.Width, CurrentImageBox.Height)
