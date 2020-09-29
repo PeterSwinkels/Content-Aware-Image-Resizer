@@ -142,7 +142,16 @@ Public Class InterfaceWindow
    Private Sub DisplayStatus(Optional Status As String = Nothing)
       Try
          With My.Application.Info
-            Me.Text = $"{ .Title} v{ .Version} - by: { .CompanyName}"
+            Me.Text = $"{ .Title} "
+#If PLATFORM = "x86" Then
+            Me.Text &= "x86"
+#Else
+            Me.Text &= "x64"
+#End If
+            Me.Text &= $" v{ .Version} - by: { .CompanyName}"
+#If DEBUG Then
+            Me.Text &= " (DEBUG) "
+#End If
             If CurrentImage IsNot Nothing Then Me.Text &= $" - Image size: {CurrentImage.Width}x{CurrentImage.Height}"
             If Not Status = Nothing Then Me.Text &= $" - {Status}"
          End With
