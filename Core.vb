@@ -20,11 +20,11 @@ Public Module CoreModule
 
    'This structure defines a seam.
    Private Structure SeamStr
-      Public Energy As Integer            'Contains the seam's energy.
-      Public Indexes As List(Of Integer)  'Contains the indexes of the seam's pixels.
+      Public Energy As Integer            'Defines the seam's energy.
+      Public Indexes As List(Of Integer)  'Defines the indexes of the seam's pixels.
    End Structure
 
-   Private Const ARGB_SIZE As Integer = 4  'The number of bytes in an alpha, red, green, and blue color value.
+   Private Const ARGB_SIZE As Integer = &H4%   'Defines the number of bytes in an alpha, red, green, and blue color value.
 
    'This procedure returns the best vertical seam.
    Private Function BestVerticalSeam(Pixels As List(Of Byte), Stride As Integer, Height As Integer) As SeamStr
@@ -65,11 +65,11 @@ Public Module CoreModule
    End Function
 
    'This procedure returns the index of the lowest difference.
-   Private Function GetLowest(Differences() As Integer) As Integer
+   Private Function GetLowest(Differences As List(Of Integer)) As Integer
       Try
          Dim Lowest As Integer = 1
 
-         For Index As Integer = Differences.GetLowerBound(0) To Differences.GetUpperBound(0)
+         For Index As Integer = 0 To Differences.Count - 1
             If Differences(Index) < Differences(Lowest) Then Lowest = Index
          Next Index
 
@@ -155,7 +155,7 @@ Public Module CoreModule
    Private Function VerticalSeam(Pixels As List(Of Byte), Stride As Integer, Height As Integer, x As Integer) As SeamStr
       Try
          Dim CurrentIndex As Integer = Nothing
-         Dim Differences(0 To 2) As Integer
+         Dim Differences As New List(Of Integer)({0, 0, 0})
          Dim NextIndex As Integer = Nothing
          Dim Lowest As Integer = Nothing
          Dim Seam As New SeamStr With {.Energy = 0, .Indexes = New List(Of Integer)}
